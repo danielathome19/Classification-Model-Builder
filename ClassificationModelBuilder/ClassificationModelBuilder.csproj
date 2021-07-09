@@ -9,8 +9,12 @@
     <Authors>Daniel Szelogowski</Authors>
     <Company>Zero Development</Company>
     <Product>Classification Model Builder</Product>
-    <Description>Assists in the creation of convolutional neural network models for image classification.</Description>
+    <Description>Assists in the creation of convolutional neural network models for image classification. Models are generated with the Keras library, wrapped from Python in C# to allow use between languages.</Description>
     <Copyright>2021</Copyright>
+    <PackageProjectUrl>https://github.com/danielathome19/Classification-Model-Builder</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/danielathome19/Classification-Model-Builder</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
