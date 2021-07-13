@@ -45,11 +45,11 @@ namespace ClassificationModelBuilder
             this.label1 = new System.Windows.Forms.Label();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.lblModelPrediction = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblModelClassPredict = new System.Windows.Forms.Label();
             this.btnPredictImage = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnOpenPredictFile = new System.Windows.Forms.Button();
+            this.lblModelPrediction = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -67,6 +67,7 @@ namespace ClassificationModelBuilder
             // 
             // btnBuildModel
             // 
+            this.btnBuildModel.Enabled = false;
             this.btnBuildModel.Location = new System.Drawing.Point(285, 128);
             this.btnBuildModel.Name = "btnBuildModel";
             this.btnBuildModel.Size = new System.Drawing.Size(269, 119);
@@ -99,7 +100,7 @@ namespace ClassificationModelBuilder
             // 
             this.progressBar1.Location = new System.Drawing.Point(12, 70);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(1367, 52);
+            this.progressBar1.Size = new System.Drawing.Size(1633, 52);
             this.progressBar1.TabIndex = 4;
             // 
             // btnTrainModel
@@ -119,12 +120,13 @@ namespace ClassificationModelBuilder
             this.richTextBox1.Location = new System.Drawing.Point(560, 128);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(819, 350);
+            this.richTextBox1.Size = new System.Drawing.Size(1085, 350);
             this.richTextBox1.TabIndex = 7;
             this.richTextBox1.Text = "";
             // 
             // btnLoadModel
             // 
+            this.btnLoadModel.Enabled = false;
             this.btnLoadModel.Location = new System.Drawing.Point(12, 128);
             this.btnLoadModel.Name = "btnLoadModel";
             this.btnLoadModel.Size = new System.Drawing.Size(269, 119);
@@ -201,44 +203,37 @@ namespace ClassificationModelBuilder
             this.richTextBox2.Location = new System.Drawing.Point(560, 484);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(820, 613);
+            this.richTextBox2.Size = new System.Drawing.Size(1085, 445);
             this.richTextBox2.TabIndex = 12;
             this.richTextBox2.Text = "";
             // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.lblModelPrediction);
-            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.lblModelClassPredict);
             this.panel2.Controls.Add(this.btnPredictImage);
             this.panel2.Controls.Add(this.pictureBox1);
             this.panel2.Controls.Add(this.btnOpenPredictFile);
             this.panel2.Location = new System.Drawing.Point(12, 686);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(542, 411);
+            this.panel2.Size = new System.Drawing.Size(542, 438);
             this.panel2.TabIndex = 13;
             // 
-            // lblModelPrediction
+            // lblModelClassPredict
             // 
-            this.lblModelPrediction.AutoSize = true;
-            this.lblModelPrediction.Location = new System.Drawing.Point(238, 360);
-            this.lblModelPrediction.Name = "lblModelPrediction";
-            this.lblModelPrediction.Size = new System.Drawing.Size(0, 37);
-            this.lblModelPrediction.TabIndex = 17;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 360);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(227, 37);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Model Prediction:";
+            this.lblModelClassPredict.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.lblModelClassPredict.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblModelClassPredict.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblModelClassPredict.Location = new System.Drawing.Point(5, 245);
+            this.lblModelClassPredict.Name = "lblModelClassPredict";
+            this.lblModelClassPredict.Size = new System.Drawing.Size(532, 76);
+            this.lblModelClassPredict.TabIndex = 17;
+            this.lblModelClassPredict.Text = "Most likely class: ";
             // 
             // btnPredictImage
             // 
             this.btnPredictImage.Enabled = false;
-            this.btnPredictImage.Location = new System.Drawing.Point(3, 248);
+            this.btnPredictImage.Location = new System.Drawing.Point(3, 324);
             this.btnPredictImage.Name = "btnPredictImage";
             this.btnPredictImage.Size = new System.Drawing.Size(535, 109);
             this.btnPredictImage.TabIndex = 16;
@@ -266,12 +261,22 @@ namespace ClassificationModelBuilder
             this.btnOpenPredictFile.UseVisualStyleBackColor = true;
             this.btnOpenPredictFile.Click += new System.EventHandler(this.btnOpenPredictFile_Click);
             // 
+            // lblModelPrediction
+            // 
+            this.lblModelPrediction.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblModelPrediction.Location = new System.Drawing.Point(560, 932);
+            this.lblModelPrediction.Name = "lblModelPrediction";
+            this.lblModelPrediction.Size = new System.Drawing.Size(1085, 192);
+            this.lblModelPrediction.TabIndex = 14;
+            this.lblModelPrediction.Text = "Model Prediction:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1392, 1109);
+            this.ClientSize = new System.Drawing.Size(1657, 1136);
             this.Controls.Add(this.panel2);
+            this.Controls.Add(this.lblModelPrediction);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnLoadModel);
             this.Controls.Add(this.btnBuildModel);
@@ -291,7 +296,6 @@ namespace ClassificationModelBuilder
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -317,10 +321,10 @@ namespace ClassificationModelBuilder
         private System.Windows.Forms.Button btnClassifyImages;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label lblModelPrediction;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnPredictImage;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnOpenPredictFile;
+        private System.Windows.Forms.Label lblModelClassPredict;
     }
 }
 

@@ -60,10 +60,8 @@ namespace ClassificationModelBuilder
                         }
                     };
                     objBackgroundWorker.ProgressChanged += (o, ea) => { progressBar1.Value = ea.ProgressPercentage; };
-                    objBackgroundWorker.RunWorkerCompleted += (o, ea) => { 
+                    objBackgroundWorker.RunWorkerCompleted += (o, ea) => {
                         lblNumImages.Text = "Number of images to train on: " + _trainingSet.Count;
-                        btnBuildModel.Enabled = true;
-                        btnLoadModel.Enabled = true;
                         btnClassifyImages.Enabled = true;
                     };
                     objBackgroundWorker.RunWorkerAsync();
@@ -129,15 +127,27 @@ namespace ClassificationModelBuilder
             model.Add(new Dense(64));
             model.Add(new Activation("relu"));
             model.Add(new Dropout(0.05));
-            model.Add(new Dense(1));
-            model.Add(new Activation("softmax"));
+            model.Add(new Dense(Convert.ToInt32(numOfClasses.Text)));                // 1 for binary classification
+            model.Add(new Activation("sigmoid"));
 
-            model.Compile(optimizer: "rmsprop", loss: "binary_crossentropy", metrics: new string[] { "accuracy" });
+            model.Compile(optimizer: "nadam", loss: "sparse_categorical_crossentropy", metrics: new string[] { "accuracy" });
+            //model.Compile(optimizer: "rmsprop", loss: "binary_crossentropy", metrics: new string[] { "accuracy" }); binary classification
 
             richTextBox1.Text = "Model Summary:\n========================================\n" + JValue.Parse(model.ToJson()).ToString(Formatting.Indented);
             btnTrainModel.Enabled = true;
-            btnSaveModel.Enabled = true;
-            btnClassifyImages.Enabled = true;
+            //btnClassifyImages.Enabled = true;
+        }
+
+        private void appendClasses()
+        {
+            string[] modelClasses = getClasses();
+            richTextBox2.Text = "Model classes:\n[";
+            for (int i = 0; i < modelClasses.Length; i++)
+            {
+                richTextBox2.Text += $"[{i}] => {modelClasses[i]},\n";
+            }
+            richTextBox2.Text += "]";
+            richTextBox2.Text += "\n========================================\n";
         }
 
         int img_width = 400;
@@ -161,7 +171,8 @@ namespace ClassificationModelBuilder
                 if (numEpochs != -1)
                 {
                     //Begin training
-                    richTextBox2.Text = "Beginning training...";
+                    appendClasses();
+                    richTextBox2.Text += "Beginning training...";
                     Thread.Sleep(500);
                     //Creates training test splitter, observations are shuffled randomly
                     var splitter = new RandomTrainingTestIndexSplitter<Entry<string,string>>(trainingPercentage: 0.7, seed: 24);
@@ -217,16 +228,7 @@ namespace ClassificationModelBuilder
                     var y_train_pred = model.PredictGenerator(train_generator);       //prediction on the train data
                     double[] y_test_pred = model.EvaluateGenerator(test_generator);
 
-                    string[] modelClasses = getClasses();
-
                     richTextBox2.Text += "\nTraining complete!\nExecution time: " + elapsedMs.ToString() + "ms\n========================================\n";
-                    richTextBox2.Text += "Model classes:\n[";
-                    for (int i = 0; i < modelClasses.Length; i++)
-                    {
-                        richTextBox2.Text += $"[{i}] => {modelClasses[i]},\n";
-                    }
-                    richTextBox2.Text += "]";
-                    richTextBox2.Text += "\n========================================\n";
                     richTextBox2.Text += "Model prediction on training data:\n" + y_train_pred.ToString();
                     richTextBox2.Text += "\n========================================\n";
                     richTextBox2.Text += "Model evaluation on testing data" + ":\n[";
@@ -254,6 +256,7 @@ namespace ClassificationModelBuilder
                     richTextBox2.Text += "}";
 
                     btnOpenPredictFile.Enabled = true;
+                    btnSaveModel.Enabled = true;
                 }
             } else
             {
@@ -411,9 +414,10 @@ namespace ClassificationModelBuilder
                 {
                     indices = classifyForm.classifiedImages;
                     if (indices.Length == 0 || indices == null || indices.Length < _files.Length || indices.Contains(null)) throw new IndexOutOfRangeException("Images not classified");
-                    btnTrainModel.Enabled = true;
                     //MessageBox.Show("Indices contains " + indices.Length + " items");
                     imagesClassified = true;
+                    btnLoadModel.Enabled = true;
+                    btnBuildModel.Enabled = true;
                 } else
                 {
                     throw new IndexOutOfRangeException("Images not classified");
@@ -460,6 +464,8 @@ namespace ClassificationModelBuilder
                 predictionImgPath = "";
                 predictionBmp = null;
             }
+            lblModelPrediction.Text = "Model Prediction: ";
+            lblModelClassPredict.Text = "Most Likely class: ";
         }
 
         Bitmap predictionBmp = null;
@@ -482,7 +488,7 @@ namespace ClassificationModelBuilder
                 string fileDir = Path.Combine(train_data_dir, "PredictionFile");
                 Directory.CreateDirectory(fileDir);
                 File.Copy(predictionImgPath, Path.Combine(fileDir, "predict_temp" + Path.GetExtension(predictionImgPath)));
-                //Need to add a button to save class list, another to load class list, then generate CLASSNUMBER number of folders
+                //Maybe add a button to save class list, another to load class list, then generate CLASSNUMBER number of folders
                 var train_generator = train_datagen.FlowFromDirectory(
                     train_data_dir,
                     target_size: new Tuple<int, int>(img_width, img_height),
@@ -490,8 +496,14 @@ namespace ClassificationModelBuilder
                     class_mode: "binary"
                     );
 
-                var y_train_pred = model.PredictGenerator(train_generator);       //prediction on the train data
-                lblModelPrediction.Text = y_train_pred.ToString();
+
+                string[] modelClasses = getClasses();
+                var y_train_pred = model.PredictGenerator(train_generator);       //Prediction on the train data
+                //var y_train_max = y_train_pred.max(); //Value of most-likely class
+                var y_test_pred_index = y_train_pred.argmax(); //Index of most-likely class
+                //MessageBox.Show(y_test_pred_index.ToString());
+                lblModelPrediction.Text = "Model Prediction: " + y_train_pred.ToString();
+                lblModelClassPredict.Text = "Most Likely class: " + modelClasses[y_test_pred_index.item<int>(0)];
             } catch (Exception ex)
             {
                 MessageBox.Show("Error occurred during prediction: " + ex.Message);
