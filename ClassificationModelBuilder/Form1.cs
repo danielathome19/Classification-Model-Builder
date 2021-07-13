@@ -130,7 +130,7 @@ namespace ClassificationModelBuilder
             model.Add(new Activation("relu"));
             model.Add(new Dropout(0.05));
             model.Add(new Dense(1));
-            model.Add(new Activation("sigmoid"));
+            model.Add(new Activation("softmax"));
 
             model.Compile(optimizer: "rmsprop", loss: "binary_crossentropy", metrics: new string[] { "accuracy" });
 
