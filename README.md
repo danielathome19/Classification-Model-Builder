@@ -17,6 +17,9 @@ You'll need the following NuGet packages installed along with .NET Framework 5.0
   * SharpLearning.Metrics
   
  [Here's a guide on how to install NuGet packages in Visual Studio](https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio)
+ 
+ Here's what the program looks like:
+ ![Demo screenshot](https://github.com/danielathome19/Classification-Model-Builder/blob/master/ClassificationModelBuilder/Demo.jpg?raw=true)
 
 # Bugs/Features
 Bugs are tracked using the GitHub Issue Tracker.
